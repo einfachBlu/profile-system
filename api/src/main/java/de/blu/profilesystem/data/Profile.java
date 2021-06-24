@@ -20,6 +20,12 @@ public class Profile {
   /** The Player UniqueId which is linked to this Profile */
   private UUID playerId;
 
+  /** The Player UniqueId which is currently logged in to this Profile */
+  private UUID loggedInPlayerId;
+
+  /** Last Update of the logged in Player. This allows auto-logout if no update was received */
+  private long loggedInLastUpdate;
+
   /** The Time in milliseconds when this Profile was created */
   private long creationTime;
 
@@ -50,6 +56,7 @@ public class Profile {
     this.id = profile.getId();
     this.name = profile.getName();
     this.playerId = profile.getPlayerId();
+    this.loggedInPlayerId = profile.getLoggedInPlayerId();
     this.creationTime = profile.getCreationTime();
     this.lastLoginTime = profile.getLastLoginTime();
     this.playTimes = profile.getPlayTimes();

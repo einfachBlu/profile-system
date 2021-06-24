@@ -102,7 +102,14 @@ public final class LocalStorage implements Storage {
   private void save() {
     try {
       try (FileWriter fileWriter = new FileWriter(this.configFile)) {
-        this.gson.toJson(this.getProfileRepository().all(), fileWriter);
+        List<Profile> profiles = new ArrayList<>(this.getProfileRepository().all());
+
+        for (Profile profile : profiles) {
+          profile.setLoggedInPlayerId(null);
+          profile.setLoggedInLastUpdate(0);
+        }
+
+        this.gson.toJson(profiles, fileWriter);
       }
     } catch (IOException e) {
       e.printStackTrace();

@@ -4,10 +4,8 @@ import com.google.gson.Gson;
 import de.blu.profilesystem.data.Profile;
 import de.blu.profilesystem.exception.ServiceUnreachableException;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public final class ProfileWebRequester extends WebRequester {
 
@@ -78,6 +76,50 @@ public final class ProfileWebRequester extends WebRequester {
     }
 
     return new Gson().fromJson(content, Profile.class);
+  }
+
+  private Map<UUID, TimerTask> profileLoginUpdateTasks = new HashMap<>();
+
+  public void startLoginUpdateTask(String url, Profile profile) throws ServiceUnreachableException {
+    final Timer timer = new Timer();
+    final TimerTask timerTask =
+        new TimerTask() {
+          @Override
+          public void run() {
+            profile.setLoggedInLastUpdate(System.currentTimeMillis());
+            try {
+              updateProfile(url, profile);
+            } catch (ServiceUnreachableException e) {
+              System.out.println(
+                  "Couldn't update login time of Profile "
+                      + profile.getName()
+                      + ". Service unreachable!");
+            }
+          }
+        };
+    this.profileLoginUpdateTasks.put(profile.getId(), timerTask);
+    timer.schedule(timerTask, 0, TimeUnit.SECONDS.toMillis(2));
+  }
+
+  public void stopLoginUpdateTask(String url, Profile profile) throws ServiceUnreachableException {
+    if (!this.profileLoginUpdateTasks.containsKey(profile.getId())) {
+      return;
+    }
+
+    this.profileLoginUpdateTasks.remove(profile.getId()).cancel();
+  }
+
+  public void login(String url, UUID playerId, Profile profile) throws ServiceUnreachableException {
+    profile.setLoggedInPlayerId(playerId);
+    profile.setLoggedInLastUpdate(System.currentTimeMillis());
+    this.updateProfile(url, profile);
+  }
+
+  public void logout(String url, UUID playerId, Profile profile)
+      throws ServiceUnreachableException {
+    profile.setLoggedInPlayerId(null);
+    profile.setLoggedInLastUpdate(0);
+    this.updateProfile(url, profile);
   }
 
   public Profile updateProfile(String url, Profile updatedProfile)
