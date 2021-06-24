@@ -63,6 +63,7 @@ public class ProfileService {
 
     System.out.println("PATCH:");
     System.out.println("\t- http://localhost:8081/profile");
+    System.out.println("\t- http://localhost:8081/profileloginupdate");
 
     System.out.println("DELETE:");
     System.out.println("\t- http://localhost:8081/profile?id=%profileId%");

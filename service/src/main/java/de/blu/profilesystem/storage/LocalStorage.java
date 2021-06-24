@@ -89,6 +89,11 @@ public final class LocalStorage implements Storage {
 
   @Override
   public void update(Profile profile) {
+    this.update(profile, false);
+  }
+
+  @Override
+  public void update(Profile profile, boolean onlyLoginUpdate) {
     Profile targetProfile = this.getProfileRepository().getById(profile.getId());
     if (targetProfile == null) {
       return;
@@ -96,7 +101,9 @@ public final class LocalStorage implements Storage {
 
     targetProfile.copyFrom(profile);
 
-    this.save();
+    if (!onlyLoginUpdate) {
+      this.save();
+    }
   }
 
   private void save() {

@@ -57,6 +57,7 @@ public class Profile {
     this.name = profile.getName();
     this.playerId = profile.getPlayerId();
     this.loggedInPlayerId = profile.getLoggedInPlayerId();
+    this.loggedInLastUpdate = profile.getLoggedInLastUpdate();
     this.creationTime = profile.getCreationTime();
     this.lastLoginTime = profile.getLastLoginTime();
     this.playTimes = profile.getPlayTimes();

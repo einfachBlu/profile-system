@@ -98,7 +98,7 @@ public final class ProfileWebRequester extends WebRequester {
           public void run() {
             profile.setLoggedInLastUpdate(System.currentTimeMillis());
             try {
-              updateProfile(url, profile);
+              updateProfileLogin(url, profile);
             } catch (ServiceUnreachableException e) {
               System.out.println(
                   "Couldn't update login time of Profile "
@@ -122,7 +122,7 @@ public final class ProfileWebRequester extends WebRequester {
   public void login(String url, UUID playerId, Profile profile) throws ServiceUnreachableException {
     profile.setLoggedInPlayerId(playerId);
     profile.setLoggedInLastUpdate(System.currentTimeMillis());
-    this.updateProfile(url, profile);
+    this.updateProfileLogin(url, profile);
   }
 
   public void logout(String url, UUID playerId, Profile profile)
@@ -135,6 +135,17 @@ public final class ProfileWebRequester extends WebRequester {
   public Profile updateProfile(String url, Profile updatedProfile)
       throws ServiceUnreachableException {
     String content = this.patchRequest(url + "/profile", new Gson().toJson(updatedProfile));
+
+    if (content.isEmpty()) {
+      return null;
+    }
+
+    return new Gson().fromJson(content, Profile.class);
+  }
+
+  public Profile updateProfileLogin(String url, Profile updatedProfile)
+      throws ServiceUnreachableException {
+    String content = this.patchRequest(url + "/profileloginupdate", new Gson().toJson(updatedProfile));
 
     if (content.isEmpty()) {
       return null;

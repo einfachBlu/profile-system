@@ -47,6 +47,11 @@ public final class InMemoryStorage implements Storage {
 
   @Override
   public void update(Profile profile) {
+    this.update(profile, false);
+  }
+
+  @Override
+  public void update(Profile profile, boolean onlyLoginUpdate) {
     Profile targetProfile = this.getProfileRepository().getById(profile.getId());
     if (targetProfile == null) {
       return;

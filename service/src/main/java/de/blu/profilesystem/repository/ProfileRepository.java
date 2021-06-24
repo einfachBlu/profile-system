@@ -63,7 +63,7 @@ public final class ProfileRepository extends Repository<Profile> {
 
   public Profile getLoggedInProfileByPlayer(UUID playerId) {
     return this.all().stream()
-        .filter(profile -> profile.getLoggedInPlayerId().equals(playerId))
+        .filter(profile -> playerId.equals(profile.getLoggedInPlayerId()))
         .findFirst()
         .orElse(null);
   }

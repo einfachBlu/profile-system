@@ -71,6 +71,14 @@ public interface Storage {
   void update(Profile profile);
 
   /**
+   * Update a Profile into the Storage The Id will be used as a reference to the previous Profile
+   *
+   * @param profile the Profile with the new data
+   * @param onlyLoginUpdate if true, only caches will be updated
+   */
+  void update(Profile profile, boolean onlyLoginUpdate);
+
+  /**
    * Get the Repository which contains all locally cached Profile Information
    *
    * @return the Repository
