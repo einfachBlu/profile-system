@@ -34,6 +34,11 @@ public final class ShowProfiles implements WebListener {
       return this.handleProfileNameFilter(request, response);
     }
 
+    if (request.queryParams().contains("loggedInPlayer")) {
+      // Profile by the specified player logged in
+      return this.handleProfileLoginPlayerFilter(request, response);
+    }
+
     // All Profiles
     return this.gson.toJson(this.profileRepository.all());
   }
@@ -43,6 +48,22 @@ public final class ShowProfiles implements WebListener {
       UUID id = UUID.fromString(request.queryParams("id"));
 
       Profile profile = this.profileRepository.getById(id);
+      if (profile != null) {
+        return this.gson.toJson(profile);
+      }
+    } catch (IllegalArgumentException e) {
+      // no uuid
+      return this.badRequest(request, response, "invalid id");
+    }
+
+    return this.notFoundRequest(request, response, "unknown id");
+  }
+
+  public Object handleProfileLoginPlayerFilter(Request request, Response response) {
+    try {
+      UUID playerId = UUID.fromString(request.queryParams("loggedInPlayer"));
+
+      Profile profile = this.profileRepository.getLoggedInProfileByPlayer(playerId);
       if (profile != null) {
         return this.gson.toJson(profile);
       }

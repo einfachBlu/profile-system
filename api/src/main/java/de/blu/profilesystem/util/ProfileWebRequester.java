@@ -30,6 +30,16 @@ public final class ProfileWebRequester extends WebRequester {
     return new Gson().fromJson(content, Profile.class);
   }
 
+  public Profile getCurrentProfile(String url, UUID playerId) throws ServiceUnreachableException {
+    String content = this.getRequest(url + "/profiles?loggedInPlayer=" + playerId.toString());
+
+    if (content.isEmpty()) {
+      return null;
+    }
+
+    return new Gson().fromJson(content, Profile.class);
+  }
+
   public List<Profile> getProfilesByPlayer(String url, UUID playerId)
       throws ServiceUnreachableException {
     String content = this.getRequest(url + "/profiles?player=" + playerId.toString());
