@@ -99,10 +99,7 @@ public final class LocalStorage implements Storage {
       return;
     }
 
-    System.out.println("Updated profile");
-    System.out.println("from: " + targetProfile.toJson().toString());
     targetProfile.copyFrom(profile);
-    System.out.println("to: " + targetProfile.toJson().toString());
 
     if (!onlyCache) {
       this.save();

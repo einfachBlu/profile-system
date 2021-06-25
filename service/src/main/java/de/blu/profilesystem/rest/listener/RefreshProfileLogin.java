@@ -32,7 +32,7 @@ public final class RefreshProfileLogin implements WebListener {
 
     profile.setLoggedInLastUpdate(System.currentTimeMillis());
 
-    this.storage.update(profile, false);
+    this.storage.update(profile, true);
 
     return this.gson.toJson(profile);
   }
