@@ -9,6 +9,8 @@ import java.util.concurrent.TimeUnit;
 
 public final class ProfileWebRequester extends WebRequester {
 
+  private static Map<UUID, TimerTask> profileLoginUpdateTasks = new HashMap<>();
+
   public List<Profile> getProfiles(String url) throws ServiceUnreachableException {
     String content = this.getRequest(url + "/profiles");
 
@@ -88,15 +90,12 @@ public final class ProfileWebRequester extends WebRequester {
     return new Gson().fromJson(content, Profile.class);
   }
 
-  private Map<UUID, TimerTask> profileLoginUpdateTasks = new HashMap<>();
-
   public void startLoginUpdateTask(String url, Profile profile) throws ServiceUnreachableException {
     final Timer timer = new Timer();
     final TimerTask timerTask =
         new TimerTask() {
           @Override
           public void run() {
-            profile.setLoggedInLastUpdate(System.currentTimeMillis());
             try {
               updateProfileLogin(url, profile);
             } catch (ServiceUnreachableException e) {
@@ -107,29 +106,42 @@ public final class ProfileWebRequester extends WebRequester {
             }
           }
         };
-    this.profileLoginUpdateTasks.put(profile.getId(), timerTask);
-    timer.schedule(timerTask, 0, TimeUnit.SECONDS.toMillis(2));
+    profileLoginUpdateTasks.put(profile.getId(), timerTask);
+    timer.schedule(timerTask, 0, TimeUnit.SECONDS.toMillis(3));
   }
 
   public void stopLoginUpdateTask(String url, Profile profile) throws ServiceUnreachableException {
-    if (!this.profileLoginUpdateTasks.containsKey(profile.getId())) {
+    if (!profileLoginUpdateTasks.containsKey(profile.getId())) {
       return;
     }
 
-    this.profileLoginUpdateTasks.remove(profile.getId()).cancel();
+    profileLoginUpdateTasks.remove(profile.getId()).cancel();
   }
 
   public void login(String url, UUID playerId, Profile profile) throws ServiceUnreachableException {
     profile.setLoggedInPlayerId(playerId);
     profile.setLoggedInLastUpdate(System.currentTimeMillis());
-    this.updateProfileLogin(url, profile);
+    this.updateProfile(url, profile, true);
   }
 
   public void logout(String url, UUID playerId, Profile profile)
       throws ServiceUnreachableException {
     profile.setLoggedInPlayerId(null);
     profile.setLoggedInLastUpdate(0);
-    this.updateProfile(url, profile);
+    this.updateProfile(url, profile, true);
+  }
+
+  public Profile updateProfile(String url, Profile updatedProfile, boolean onlyCache)
+      throws ServiceUnreachableException {
+    String content =
+        this.patchRequest(
+            url + "/profile?onlycache=" + onlyCache, new Gson().toJson(updatedProfile));
+
+    if (content.isEmpty()) {
+      return null;
+    }
+
+    return new Gson().fromJson(content, Profile.class);
   }
 
   public Profile updateProfile(String url, Profile updatedProfile)
@@ -143,9 +155,9 @@ public final class ProfileWebRequester extends WebRequester {
     return new Gson().fromJson(content, Profile.class);
   }
 
-  public Profile updateProfileLogin(String url, Profile updatedProfile)
+  public Profile updateProfileLogin(String url, Profile profile)
       throws ServiceUnreachableException {
-    String content = this.patchRequest(url + "/profileloginupdate", new Gson().toJson(updatedProfile));
+    String content = this.patchRequest(url + "/profile/login/refresh", new Gson().toJson(profile));
 
     if (content.isEmpty()) {
       return null;

@@ -11,7 +11,7 @@ import spark.Response;
 import javax.inject.Singleton;
 
 @Singleton
-public final class UpdateLoginProfile implements WebListener {
+public final class RefreshProfileLogin implements WebListener {
 
   @Inject private ProfileRepository profileRepository;
   @Inject private Storage storage;
@@ -24,7 +24,15 @@ public final class UpdateLoginProfile implements WebListener {
     }
 
     Profile profile = this.gson.fromJson(request.body(), Profile.class);
-    this.storage.update(profile, true);
+    profile = this.profileRepository.getById(profile.getId());
+
+    if (profile == null) {
+      return this.badRequest(request, response);
+    }
+
+    profile.setLoggedInLastUpdate(System.currentTimeMillis());
+
+    this.storage.update(profile, false);
 
     return this.gson.toJson(profile);
   }

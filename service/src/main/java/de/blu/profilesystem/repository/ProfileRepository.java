@@ -1,7 +1,9 @@
 package de.blu.profilesystem.repository;
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import de.blu.profilesystem.data.Profile;
+import de.blu.profilesystem.listener.ProfileLogoutListener;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -9,6 +11,8 @@ import java.util.stream.Collectors;
 
 @Singleton
 public final class ProfileRepository extends Repository<Profile> {
+
+  @Inject private ProfileLogoutListener profileLogoutListener;
 
   public ProfileRepository() {
     new Timer()
@@ -32,8 +36,9 @@ public final class ProfileRepository extends Repository<Profile> {
                   UUID playerId = profile.getLoggedInPlayerId();
                   profile.setLoggedInPlayerId(null);
                   profile.setLoggedInLastUpdate(0);
-                  System.out.println(
-                      "Timeout | Logged out " + playerId + " out of profile " + profile.getName());
+                  // System.out.println("Timeout | Logged out " + playerId + " out of profile " +
+                  // profile.getName());
+                  profileLogoutListener.onLogout(profile, playerId);
                 }
               }
             },

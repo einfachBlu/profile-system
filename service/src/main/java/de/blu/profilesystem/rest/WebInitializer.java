@@ -18,7 +18,7 @@ public final class WebInitializer {
     Spark.put("/profile", this.injector.getInstance(InsertProfile.class));
     Spark.delete("/profile", this.injector.getInstance(DeleteProfile.class));
     Spark.patch("/profile", this.injector.getInstance(UpdateProfile.class));
-    Spark.patch("/profileloginupdate", this.injector.getInstance(UpdateLoginProfile.class));
+    Spark.patch("/profile/login/refresh", this.injector.getInstance(RefreshProfileLogin.class));
 
     Spark.awaitInitialization();
   }
