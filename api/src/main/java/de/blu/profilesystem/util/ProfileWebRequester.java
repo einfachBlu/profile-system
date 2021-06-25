@@ -90,32 +90,31 @@ public final class ProfileWebRequester extends WebRequester {
     return new Gson().fromJson(content, Profile.class);
   }
 
-  public void startLoginUpdateTask(String url, Profile profile) throws ServiceUnreachableException {
+  public void startLoginUpdateTask(String url, UUID playerId) throws ServiceUnreachableException {
     final Timer timer = new Timer();
     final TimerTask timerTask =
         new TimerTask() {
           @Override
           public void run() {
             try {
+              Profile profile = getCurrentProfile(url, playerId);
               updateProfileLogin(url, profile);
             } catch (ServiceUnreachableException e) {
               System.out.println(
-                  "Couldn't update login time of Profile "
-                      + profile.getName()
-                      + ". Service unreachable!");
+                  "Couldn't update login time of Profile: Service unreachable!");
             }
           }
         };
-    profileLoginUpdateTasks.put(profile.getId(), timerTask);
+    profileLoginUpdateTasks.put(playerId, timerTask);
     timer.schedule(timerTask, 0, TimeUnit.SECONDS.toMillis(3));
   }
 
-  public void stopLoginUpdateTask(String url, Profile profile) throws ServiceUnreachableException {
-    if (!profileLoginUpdateTasks.containsKey(profile.getId())) {
+  public void stopLoginUpdateTask(String url, UUID playerId) throws ServiceUnreachableException {
+    if (!profileLoginUpdateTasks.containsKey(playerId)) {
       return;
     }
 
-    profileLoginUpdateTasks.remove(profile.getId()).cancel();
+    profileLoginUpdateTasks.remove(playerId).cancel();
   }
 
   public void login(String url, UUID playerId, Profile profile) throws ServiceUnreachableException {

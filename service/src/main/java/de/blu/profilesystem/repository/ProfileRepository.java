@@ -23,6 +23,9 @@ public final class ProfileRepository extends Repository<Profile> {
                 // Check logged in Profiles
                 List<Profile> profiles = new ArrayList<>(all());
                 for (Profile profile : profiles) {
+                  System.out.println("getLoggedInPlayerId: " + profile.getLoggedInPlayerId());
+                  System.out.println("getLoggedInLastUpdate: " + profile.getLoggedInLastUpdate());
+
                   if (profile.getLoggedInPlayerId() == null) {
                     continue;
                   }
@@ -36,8 +39,8 @@ public final class ProfileRepository extends Repository<Profile> {
                   UUID playerId = profile.getLoggedInPlayerId();
                   profile.setLoggedInPlayerId(null);
                   profile.setLoggedInLastUpdate(0);
-                  // System.out.println("Timeout | Logged out " + playerId + " out of profile " +
-                  // profile.getName());
+                  System.out.println(
+                      "Timeout | Logged out " + playerId + " out of profile " + profile.getName());
                   profileLogoutListener.onLogout(profile, playerId);
                 }
               }
