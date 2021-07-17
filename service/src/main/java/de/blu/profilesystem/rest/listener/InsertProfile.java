@@ -34,7 +34,6 @@ public final class InsertProfile implements WebListener {
 
     profile.setId(UUID.randomUUID());
     profile.setCreationTime(System.currentTimeMillis());
-    profile.setLastLoginTime(profile.getCreationTime());
 
     // Check for unique Name
     if (profile.getName() == null

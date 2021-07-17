@@ -27,17 +27,9 @@ public final class ProfileRepository extends Repository<Profile> {
                     continue;
                   }
 
-                  if (System.currentTimeMillis() - profile.getLoggedInLastUpdate()
-                      <= TimeUnit.SECONDS.toMillis(10)) {
-                    continue;
-                  }
-
                   // Timeout
                   UUID playerId = profile.getLoggedInPlayerId();
                   profile.setLoggedInPlayerId(null);
-                  profile.setLoggedInLastUpdate(0);
-                  // System.out.println("Timeout | Logged out " + playerId + " out of profile " +
-                  // profile.getName());
                   profileLogoutListener.onLogout(profile, playerId);
                 }
               }

@@ -1,8 +1,10 @@
 package de.blu.profilesystem.data;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class PlayTime {
 
   /** The time in Millis when the PlayTime started */
@@ -16,7 +18,7 @@ public class PlayTime {
    *
    * @return milliseconds between the from and to of this PlayTime
    */
-  public long duration(){
+  public long duration() {
     if (this.to == -1) {
       return System.currentTimeMillis() - this.from;
     }

@@ -23,14 +23,8 @@ public class Profile {
   /** The Player UniqueId which is currently logged in to this Profile */
   private UUID loggedInPlayerId;
 
-  /** Last Update of the logged in Player. This allows auto-logout if no update was received */
-  private long loggedInLastUpdate;
-
   /** The Time in milliseconds when this Profile was created */
   private long creationTime;
-
-  /** The last Time in milliseconds when someone logged in with this Profile */
-  private long lastLoginTime;
 
   /** The last Time in milliseconds when someone logged in with this Profile */
   private List<PlayTime> playTimes = new ArrayList<>();
@@ -57,9 +51,7 @@ public class Profile {
     this.name = profile.getName();
     this.playerId = profile.getPlayerId();
     this.loggedInPlayerId = profile.getLoggedInPlayerId();
-    this.loggedInLastUpdate = profile.getLoggedInLastUpdate();
     this.creationTime = profile.getCreationTime();
-    this.lastLoginTime = profile.getLastLoginTime();
     this.playTimes = profile.getPlayTimes();
     this.data = profile.getData();
   }
