@@ -33,6 +33,6 @@ public final class ProfileLogoutListener {
                     + playerId
                     + "```"
                     + "";
-    DiscordWebhook.PROFILE_LOGOUT_WEBHOOK.sendEmbed(null, description, Color.RED);
+    //DiscordWebhook.PROFILE_LOGOUT_WEBHOOK.sendEmbed(null, description, Color.RED);
   }
 }
