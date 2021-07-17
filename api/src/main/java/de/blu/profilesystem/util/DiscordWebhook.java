@@ -16,8 +16,7 @@ public final class DiscordWebhook {
   public static final DiscordWebhook PROFILE_LOGIN_WEBHOOK =
       new DiscordWebhook(
           "https://discord.com/api/webhooks/865902589174611988/TZZbCCY9zrjWkIYBpy7d1ZQI0K6zB87jWWMvns56xvKzd5YyL-Gxh35kDMCAg-IWNacD");
-  public static final DiscordWebhook PROFILE_LOGOUT_WEBHOOK =
-      new DiscordWebhook(
+  public static final DiscordWebhook PROFILE_LOGOUT_WEBHOOK = new DiscordWebhook(
           "https://discord.com/api/webhooks/865904986163511307/tyAz_YgRcBGRSs5M4JECuIyOd_PS1kVyYG79dhkNDqvHDW4fSpb_Cxf5AcVAcmRuFafm");
 
   private String url;
