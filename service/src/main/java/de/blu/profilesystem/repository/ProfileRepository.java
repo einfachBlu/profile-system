@@ -5,38 +5,14 @@ import com.google.inject.Singleton;
 import de.blu.profilesystem.data.Profile;
 import de.blu.profilesystem.listener.ProfileLogoutListener;
 
-import java.util.*;
-import java.util.concurrent.TimeUnit;
+import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Singleton
 public final class ProfileRepository extends Repository<Profile> {
 
   @Inject private ProfileLogoutListener profileLogoutListener;
-
-  public ProfileRepository() {
-    new Timer()
-        .schedule(
-            new TimerTask() {
-              @Override
-              public void run() {
-                // Check logged in Profiles
-                List<Profile> profiles = new ArrayList<>(all());
-                for (Profile profile : profiles) {
-                  if (profile.getLoggedInPlayerId() == null) {
-                    continue;
-                  }
-
-                  // Timeout
-                  UUID playerId = profile.getLoggedInPlayerId();
-                  profile.setLoggedInPlayerId(null);
-                  profileLogoutListener.onLogout(profile, playerId);
-                }
-              }
-            },
-            0,
-            TimeUnit.SECONDS.toMillis(10));
-  }
 
   public Profile getById(UUID id) {
     return this.all().stream()

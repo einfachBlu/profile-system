@@ -55,17 +55,6 @@ public final class ProfileWebRequester extends WebRequester {
     return Arrays.asList(profiles);
   }
 
-  public Profile getProfileByName(String url, String profileName)
-      throws ServiceUnreachableException {
-    String content = this.getRequest(url + "/profiles?name=" + profileName);
-
-    if (content.isEmpty()) {
-      return null;
-    }
-
-    return new Gson().fromJson(content, Profile.class);
-  }
-
   public Profile createProfile(String url, UUID playerId, String name)
       throws ServiceUnreachableException {
     Profile profile = new Profile();
@@ -74,7 +63,7 @@ public final class ProfileWebRequester extends WebRequester {
 
     String content = this.putRequest(url + "/profile", profile.toString());
 
-    if (content.isEmpty() || content.equalsIgnoreCase("name already in use")) {
+    if (content.isEmpty()) {
       return null;
     }
 
@@ -102,8 +91,19 @@ public final class ProfileWebRequester extends WebRequester {
     this.updateProfile(url, profile);
   }
 
-  public void logout(String url, Profile profile)
-      throws ServiceUnreachableException {
+  public void disableProfile(String url, Profile profile) throws ServiceUnreachableException {
+    profile.setDisabled(true);
+
+    this.updateProfile(url, profile);
+  }
+
+  public void enableProfile(String url, Profile profile) throws ServiceUnreachableException {
+    profile.setDisabled(false);
+
+    this.updateProfile(url, profile);
+  }
+
+  public void logout(String url, Profile profile) throws ServiceUnreachableException {
     profile.setLoggedInPlayerId(null);
 
     // PlayTime

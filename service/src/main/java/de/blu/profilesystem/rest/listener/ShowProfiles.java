@@ -29,11 +29,6 @@ public final class ShowProfiles implements WebListener {
       return this.handleProfilePlayerFilter(request, response);
     }
 
-    if (request.queryParams().contains("name")) {
-      // Profile by the specified name
-      return this.handleProfileNameFilter(request, response);
-    }
-
     if (request.queryParams().contains("loggedInPlayer")) {
       // Profile by the specified player logged in
       return this.handleProfileLoginPlayerFilter(request, response);
@@ -90,16 +85,5 @@ public final class ShowProfiles implements WebListener {
     }
 
     return this.notFoundRequest(request, response, "unknown player");
-  }
-
-  public Object handleProfileNameFilter(Request request, Response response) {
-    String name = request.queryParams("name");
-
-    Profile profile = this.profileRepository.getByName(name);
-    if (profile != null) {
-      return this.gson.toJson(profile);
-    }
-
-    return this.notFoundRequest(request, response, "unknown name");
   }
 }

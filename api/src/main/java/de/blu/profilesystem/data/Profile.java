@@ -14,6 +14,9 @@ public class Profile {
   /** Unique identifier of this profile */
   private UUID id;
 
+  /** If this Profile is disabled/banned */
+  private boolean disabled;
+
   /** Unique Name of this Profile. Used to filter for this name */
   private String name;
 
@@ -49,6 +52,7 @@ public class Profile {
   public void copyFrom(Profile profile) {
     this.id = profile.getId();
     this.name = profile.getName();
+    this.disabled = profile.isDisabled();
     this.playerId = profile.getPlayerId();
     this.loggedInPlayerId = profile.getLoggedInPlayerId();
     this.creationTime = profile.getCreationTime();

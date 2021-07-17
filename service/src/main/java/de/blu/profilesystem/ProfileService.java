@@ -56,14 +56,12 @@ public class ProfileService {
     System.out.println("\t- http://localhost:8081/profiles");
     System.out.println("\t- http://localhost:8081/profile?id=%profileId%");
     System.out.println("\t- http://localhost:8081/profiles?player=%uuid%");
-    System.out.println("\t- http://localhost:8081/profiles?name=%name%");
 
     System.out.println("PUT:");
     System.out.println("\t- http://localhost:8081/profile");
 
     System.out.println("PATCH:");
     System.out.println("\t- http://localhost:8081/profile");
-    System.out.println("\t- http://localhost:8081/profile/login/refresh");
 
     System.out.println("DELETE:");
     System.out.println("\t- http://localhost:8081/profile?id=%profileId%");

@@ -35,14 +35,6 @@ public final class InsertProfile implements WebListener {
     profile.setId(UUID.randomUUID());
     profile.setCreationTime(System.currentTimeMillis());
 
-    // Check for unique Name
-    if (profile.getName() == null
-        || profile.getName().isEmpty()
-        || this.profileRepository.getByName(profile.getName()) != null) {
-      //response.status(460);
-      return "name already in use";
-    }
-
     this.storage.insert(profile);
 
     return this.gson.toJson(profile);
