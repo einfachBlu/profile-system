@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public final class ProfileWebRequester extends WebRequester {
 
@@ -84,6 +85,18 @@ public final class ProfileWebRequester extends WebRequester {
     profile.setLoggedInPlayerId(playerId);
 
     // PlayTime
+    // Check if merge is possible
+    if (profile.getPlayTimes().size() > 0) {
+      PlayTime lastPlayTime = profile.getPlayTimes().get(profile.getPlayTimes().size() - 1);
+      if (lastPlayTime.getTo() != -1) {
+        if ((System.currentTimeMillis() - lastPlayTime.getTo()) <= TimeUnit.SECONDS.toMillis(5)) {
+          lastPlayTime.setTo(-1);
+          this.updateProfile(url, profile);
+          return;
+        }
+      }
+    }
+
     profile.getPlayTimes().add(new PlayTime());
     PlayTime playTime = profile.getPlayTimes().get(profile.getPlayTimes().size() - 1);
     playTime.setFrom(System.currentTimeMillis());
